@@ -27,7 +27,7 @@ const DatePickerElement = styled(DatePicker)`
     margin-bottom: 1rem;
 `
 
-export default function Datepicker({ id, name, label, onChange, selected }) {
+export default function Datepicker({ id, name, label, selected, onChange, required }) {
     return (
         <DatePickerContainer>
             <DatePickerLabel htmlFor={id}>{label}</DatePickerLabel>
@@ -35,8 +35,9 @@ export default function Datepicker({ id, name, label, onChange, selected }) {
                 type={'text'}
                 id={id}
                 name={name}
-                onChange={onChange}
                 selected={selected}
+                onChange={onChange}
+                required = {required}
             />
         </DatePickerContainer>
     )

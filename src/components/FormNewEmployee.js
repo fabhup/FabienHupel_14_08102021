@@ -6,6 +6,8 @@ import Datepicker from './Datepicker'
 import Select from './Select'
 import { states, departments } from '../data/formData'
 import { useState } from 'react'
+import { useDispatch } from 'react-redux'
+import {addEmployee} from '../features/employees'
 
 const FormContainer = styled.div`
     width: 100%;
@@ -50,38 +52,80 @@ const FieldSet = styled.fieldset`
 `
 
 export default function FormNewEmployee() {
+    const [newEmployee, setNewEmployee] = useState({
+        firstName: '',
+        lastName: '',
+        dateOfBirth: '',
+        startDate: '',
+        street: '',
+        city: '',
+        state: '',
+        zipCode: '',
+        department: '',
+    })
     const [startDate, setStartDate] = useState(null)
-    const [birthDate, setBirthDate] = useState(null)
+    const [dateOfBirth, setBirthDate] = useState(null)
+
+    // get Redux state for employes
+    const dispatch = useDispatch()
+
+    function handleChangeInput(e) {
+        const { name, value } = e.target
+        setNewEmployee((newEmployee) => ({ ...newEmployee, [name]: value }))
+    }
+
+    function handleChangeDateOfBirth(date) {
+        const dateValue = date.toLocaleDateString('en-CA')
+        setBirthDate(date)
+        setNewEmployee((newEmployee) => ({ ...newEmployee, dateOfBirth: dateValue }))
+    }
+
+    function handleChangeStartDate(date) {
+        const dateValue = date.toLocaleDateString('en-CA')
+        setStartDate(date)
+        setNewEmployee((newEmployee) => ({ ...newEmployee, startDate: dateValue }))
+    }
+
+    const handleSubmit = (e) => {
+        e.preventDefault()
+        console.log(newEmployee)
+        dispatch(addEmployee(newEmployee))
+    }
 
     return (
         <FormContainer>
-            <Form>
+            <Form onSubmit={handleSubmit}>
                 <Input
                     inputType="text"
-                    inputId="first-name"
+                    inputId="firstName"
                     inputLabel="First Name"
-                    inputName="first-name"
-                    // inputValue={firstname}
-                ></Input>
+                    inputName="firstName"
+                    onChange={handleChangeInput}
+                    required
+                    ></Input>
                 <Input
                     inputType="text"
-                    inputId="last-name"
+                    inputId="lastName"
                     inputLabel="Last Name"
-                    inputName="last-name"
+                    inputName="lastName"
+                    onChange={handleChangeInput}
+                    required
                 ></Input>
                 <Datepicker
-                    id="date-of-birth"
+                    id="dateOfBirth"
                     label="Date of Birth"
-                    name="date-of-birth"
-                    selected={birthDate}
-                    onChange={(date) => setBirthDate(date)}
+                    name="dateOfBirth"
+                    selected={dateOfBirth}
+                    onChange={(date) => handleChangeDateOfBirth(date)}
+                    required
                 />
                 <Datepicker
-                    id="start-date"
+                    id="startDate"
                     label="Start date"
-                    name="start-date"
+                    name="startDate"
                     selected={startDate}
-                    onChange={(date) => setStartDate(date)}
+                    onChange={(date) => handleChangeStartDate(date)}
+                    required
                 />
                 <FieldSet className="address">
                     <legend align="left">Address</legend>
@@ -90,24 +134,28 @@ export default function FormNewEmployee() {
                         inputId="street"
                         inputLabel="Street"
                         inputName="street"
+                        onChange={handleChangeInput}
                     ></Input>
                     <Input
                         inputType="text"
                         inputId="city"
                         inputLabel="City"
                         inputName="city"
+                        onChange={handleChangeInput}
                     ></Input>
                     <Select
                         selectId="state"
                         selectLabel="State"
                         selectName="state"
                         selectOptions={states}
+                        onChange={handleChangeInput}
                     />
                     <Input
                         inputType="number"
-                        inputId="zip-code"
+                        inputId="zipCode"
                         inputLabel="Zip Code"
-                        inputName="zip-code"
+                        inputName="zipCode"
+                        onChange={handleChangeInput}
                     ></Input>
                 </FieldSet>
                 <Select
@@ -115,6 +163,8 @@ export default function FormNewEmployee() {
                     selectLabel="Department"
                     selectName="department"
                     selectOptions={departments}
+                    onChange={handleChangeInput}
+                    required
                 />
                 <SubmitButton
                     style={{ position: 'relative' }}

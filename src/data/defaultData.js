@@ -1,4 +1,4 @@
-export const data = [
+export const dataEmployees = [
     {
         id: 1,
         firstName: 'John',
@@ -145,7 +145,7 @@ export const data = [
     },
 ]
 
-export const columns = [
+export const columnsDatatableEmployees = [
     {
         title: 'First Name',
         key: 'firstName',

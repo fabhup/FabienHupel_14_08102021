@@ -29,11 +29,14 @@ export default function Select({
     selectName,
     selectLabel,
     selectOptions,
+    onChange,
+    required
 }) {
     return (
         <SelectContainer>
             <SelectLabel htmlFor={selectId}>{selectLabel}</SelectLabel>
-            <SelectElement id={selectId} name={selectName}>
+            <SelectElement id={selectId} name={selectName} onChange={onChange} required={required}>
+                <option selected value={''}> {`Select a ${selectLabel.toLowerCase()}`} </option>
                 {selectOptions.map((option, index) => (
                     <option
                         value={option.abbreviation || option.name}

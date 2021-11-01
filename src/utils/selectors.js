@@ -1,1 +1,2 @@
-// export const selectAuthentication = (state) => state.authentication
+
+export const selectEmployees = (state) => state.employees

@@ -64,13 +64,12 @@ export default function Input({
     inputType,
     inputName,
     inputLabel,
-    inputEvents,
+    onChange,
+    onClick,
     inputDefaultValue,
     inputValue,
-    isInvalid,
-    isInvalidText,
     inputPlaceholder,
-    isRequired,
+    required,
     disabled,
 }) {
     return (
@@ -82,15 +81,14 @@ export default function Input({
                 type={inputType}
                 id={inputId}
                 name={inputName}
-                onChange={inputEvents.onChange}
-                onClick={inputEvents.onClick}
+                onChange={onChange}
+                onClick={onClick}
                 defaultValue={inputDefaultValue}
-                inputValue={inputValue}
+                value={inputValue}
                 defaultChecked={inputValue}
-                isInvalid={isInvalid}
                 autoComplete="on"
                 placeholder={inputPlaceholder}
-                required={isRequired}
+                required={required}
                 disabled={disabled}
             />
         </InputContainer>
@@ -102,26 +100,18 @@ Input.propTypes = {
     inputType: PropTypes.string.isRequired,
     inputName: PropTypes.string.isRequired,
     inputLabel: PropTypes.string,
-    inputEvents: PropTypes.shape({
-        onChange: PropTypes.func,
-        onClick: PropTypes.func,
-    }),
+    onChange: PropTypes.func,
+    onClick: PropTypes.func,
     inputValue: PropTypes.oneOfType([
         PropTypes.string,
         PropTypes.number,
         PropTypes.bool,
     ]),
-    isInvalid: PropTypes.bool,
-    isInvalidText: PropTypes.string,
     inputPlaceholder: PropTypes.string,
 }
 
 Input.defaultProps = {
-    inputEvents: {
-        onChange: function () {},
-        onClick: function () {},
-    },
-    isInvalid: false,
-    isInvalidText: 'Invalid value',
+    onChange: function() {},
+    onClick: function() {},
     inputPlaceholder: '',
 }
