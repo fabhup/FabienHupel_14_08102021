@@ -59,6 +59,12 @@ const InputElement = styled.input`
     }}
 `
 
+const InputInvalidText = styled.span`
+    color: red;
+    font-size: 0.8rem;
+    margin-top: 5px;
+`
+
 export default function Input({
     inputId,
     inputType,
@@ -69,6 +75,8 @@ export default function Input({
     inputDefaultValue,
     inputValue,
     inputPlaceholder,
+    isInvalid,
+    isInvalidText,
     required,
     disabled,
 }) {
@@ -90,7 +98,9 @@ export default function Input({
                 placeholder={inputPlaceholder}
                 required={required}
                 disabled={disabled}
+                isInvalid={isInvalid}
             />
+            {isInvalid && <InputInvalidText>{isInvalidText}</InputInvalidText>}
         </InputContainer>
     )
 }
@@ -107,11 +117,15 @@ Input.propTypes = {
         PropTypes.number,
         PropTypes.bool,
     ]),
+    isInvalid: PropTypes.bool,
+    isInvalidText: PropTypes.string,
     inputPlaceholder: PropTypes.string,
 }
 
 Input.defaultProps = {
     onChange: function() {},
     onClick: function() {},
+    isInvalid: false,
+    isInvalidText: 'Invalid value',
     inputPlaceholder: '',
 }

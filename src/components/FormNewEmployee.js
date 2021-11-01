@@ -53,18 +53,19 @@ const FieldSet = styled.fieldset`
 
 export default function FormNewEmployee() {
     const [newEmployee, setNewEmployee] = useState({
-        firstName: '',
-        lastName: '',
-        dateOfBirth: '',
-        startDate: '',
-        street: '',
-        city: '',
-        state: '',
-        zipCode: '',
-        department: '',
+        firstName: null,
+        lastName: null,
+        dateOfBirth: null,
+        startDate: null,
+        street: null,
+        city: null,
+        state: null,
+        zipCode: null,
+        department: null,
     })
-    const [startDate, setStartDate] = useState(null)
-    const [dateOfBirth, setBirthDate] = useState(null)
+    const [startDate, setStartDate] = useState('')
+    const [dateOfBirth, setBirthDate] = useState('')
+    const [submitted, setSubmitted] = useState(false)
 
     // get Redux state for employes
     const dispatch = useDispatch()
@@ -75,21 +76,33 @@ export default function FormNewEmployee() {
     }
 
     function handleChangeDateOfBirth(date) {
-        const dateValue = date.toLocaleDateString('en-CA')
+        const dateValue = date ? date.toLocaleDateString('en-CA') : ""
         setBirthDate(date)
         setNewEmployee((newEmployee) => ({ ...newEmployee, dateOfBirth: dateValue }))
     }
 
     function handleChangeStartDate(date) {
-        const dateValue = date.toLocaleDateString('en-CA')
+        const dateValue = date ? date.toLocaleDateString('en-CA') : ""
         setStartDate(date)
         setNewEmployee((newEmployee) => ({ ...newEmployee, startDate: dateValue }))
     }
 
+    const isValidForm = newEmployee.firstName && newEmployee.lastName && newEmployee.dateOfBirth && newEmployee.startDate && newEmployee.department
+
+    function resetForm(e) {
+        e.target.reset()
+        setStartDate('')
+        setBirthDate('')
+        setSubmitted(false)
+    }
+
     const handleSubmit = (e) => {
         e.preventDefault()
-        console.log(newEmployee)
-        dispatch(addEmployee(newEmployee))
+        setSubmitted(true)
+        if (isValidForm) {
+            dispatch(addEmployee(newEmployee))
+            resetForm(e)
+        } 
     }
 
     return (
@@ -101,7 +114,8 @@ export default function FormNewEmployee() {
                     inputLabel="First Name"
                     inputName="firstName"
                     onChange={handleChangeInput}
-                    required
+                    isInvalid={submitted && !newEmployee.firstName}
+                    isInvalidText={'First Name is required'}
                     ></Input>
                 <Input
                     inputType="text"
@@ -109,23 +123,26 @@ export default function FormNewEmployee() {
                     inputLabel="Last Name"
                     inputName="lastName"
                     onChange={handleChangeInput}
-                    required
+                    isInvalid={submitted && !newEmployee.lastName}
+                    isInvalidText={'Last Name is required'}
                 ></Input>
                 <Datepicker
                     id="dateOfBirth"
                     label="Date of Birth"
                     name="dateOfBirth"
-                    selected={dateOfBirth}
+                    value={dateOfBirth}
                     onChange={(date) => handleChangeDateOfBirth(date)}
-                    required
+                    isInvalid={submitted && !newEmployee.dateOfBirth}
+                    isInvalidText={'Date of Birth is required'}
                 />
                 <Datepicker
                     id="startDate"
                     label="Start date"
                     name="startDate"
-                    selected={startDate}
+                    value={startDate}
                     onChange={(date) => handleChangeStartDate(date)}
-                    required
+                    isInvalid={submitted && !newEmployee.startDate}
+                    isInvalidText={'Start Date is required'}
                 />
                 <FieldSet className="address">
                     <legend align="left">Address</legend>
@@ -164,7 +181,8 @@ export default function FormNewEmployee() {
                     selectName="department"
                     selectOptions={departments}
                     onChange={handleChangeInput}
-                    required
+                    isInvalid={submitted && !newEmployee.department}
+                    isInvalidText={'Department is required'}
                 />
                 <SubmitButton
                     style={{ position: 'relative' }}

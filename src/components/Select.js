@@ -22,6 +22,24 @@ const SelectElement = styled.select`
     border-radius: 3px;
     border: 1px solid lightgrey;
     color: dimgray;
+    ${(props) => {
+        if (props.isInvalid) {
+            return `
+                border: 1px solid red;
+                box-shadow: 0px 0px red;
+                z-index: 1;
+                &:focus{ 
+                    outline-color: red ;
+                }
+            `
+        }
+    }}
+`
+
+const SelectInvalidText = styled.span`
+color: red;
+font-size: 0.8rem;
+margin-top: 5px;
 `
 
 export default function Select({
@@ -30,13 +48,15 @@ export default function Select({
     selectLabel,
     selectOptions,
     onChange,
-    required
+    required,
+    isInvalid,
+    isInvalidText,
 }) {
     return (
         <SelectContainer>
             <SelectLabel htmlFor={selectId}>{selectLabel}</SelectLabel>
-            <SelectElement id={selectId} name={selectName} onChange={onChange} required={required}>
-                <option selected value={''}> {`Select a ${selectLabel.toLowerCase()}`} </option>
+            <SelectElement id={selectId} name={selectName} onChange={onChange} required={required} defaultValue={''} isInvalid={isInvalid}>
+                <option value={''}> {`Select a ${selectLabel.toLowerCase()}`} </option>
                 {selectOptions.map((option, index) => (
                     <option
                         value={option.abbreviation || option.name}
@@ -46,6 +66,7 @@ export default function Select({
                     </option>
                 ))}
             </SelectElement>
+            {isInvalid && <SelectInvalidText>{isInvalidText}</SelectInvalidText>}
         </SelectContainer>
     )
 }

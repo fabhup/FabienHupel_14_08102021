@@ -7,6 +7,7 @@ const DatePickerContainer = styled.div`
     width: 100%;
     display: flex;
     flex-direction: column;
+    margin-bottom: 1rem;
 `
 const DatePickerLabel = styled.label`
     display: flex;
@@ -24,10 +25,31 @@ const DatePickerElement = styled(DatePicker)`
     border: 1px solid lightgrey;
     color: dimgray;
     width: calc(100% - 10px);
-    margin-bottom: 1rem;
+    ${(props) => {
+        if (props.isInvalid) {
+            return `
+                {
+                    color: red;
+                    border: 1px solid red !important;
+                    box-shadow: 0px 0px red;
+                    z-index: 1;
+                    &:focus{ 
+                        outline-color: red ;
+                    }
+                }
+            `
+        }
+    }}
 `
 
-export default function Datepicker({ id, name, label, selected, onChange, required }) {
+const InputInvalidText = styled.span`
+    color: red;
+    font-size: 0.8rem;
+    margin-top: 5px;
+    text-align: left;
+`
+
+export default function Datepicker({ id, name, label, value, onChange, required, isInvalid, isInvalidText }) {
     return (
         <DatePickerContainer>
             <DatePickerLabel htmlFor={id}>{label}</DatePickerLabel>
@@ -35,10 +57,13 @@ export default function Datepicker({ id, name, label, selected, onChange, requir
                 type={'text'}
                 id={id}
                 name={name}
-                selected={selected}
+                selected={value || ''}
                 onChange={onChange}
                 required = {required}
+                isInvalid = {isInvalid}
             />
+            {isInvalid && <InputInvalidText>{isInvalidText}</InputInvalidText>}
+
         </DatePickerContainer>
     )
 }
