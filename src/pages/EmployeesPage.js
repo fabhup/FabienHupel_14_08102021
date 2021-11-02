@@ -1,11 +1,10 @@
 import DataTable from 'fhp-component-library'
-import {  columnsDatatableEmployees } from '../data/defaultData'
+import { columnsDatatableEmployees } from '../data/defaultData'
 import colors from '../utils/style/color'
 import { useSelector } from 'react-redux'
 import { selectEmployees } from '../utils/selectors'
 
 export default function EmployeesPage() {
-
     // get Redux state for employees
     const employees = useSelector(selectEmployees)
 

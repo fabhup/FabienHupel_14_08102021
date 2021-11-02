@@ -7,7 +7,8 @@ import Select from './Select'
 import { states, departments } from '../data/formData'
 import { useState, useEffect, useRef } from 'react'
 import { useDispatch } from 'react-redux'
-import {addEmployee} from '../features/employees'
+import { addEmployee } from '../features/employees'
+import { openModal } from '../features/modalNewEmployee'
 
 const FormContainer = styled.div`
     width: 100%;
@@ -79,8 +80,8 @@ const FormNewEmployee = () => {
 
     useEffect(() => {
         // Focus on first input on first render component
-        firstNameRef.current.focus();
-      },[]);
+        firstNameRef.current.focus()
+    }, [])
 
     function handleChangeInput(e) {
         const { name, value } = e.target
@@ -88,15 +89,21 @@ const FormNewEmployee = () => {
     }
 
     function handleChangeDateOfBirth(date) {
-        const dateValue = date ? date.toLocaleDateString('en-CA') : ""
+        const dateValue = date ? date.toLocaleDateString('en-CA') : ''
         setBirthDate(date)
-        setNewEmployee((newEmployee) => ({ ...newEmployee, dateOfBirth: dateValue }))
+        setNewEmployee((newEmployee) => ({
+            ...newEmployee,
+            dateOfBirth: dateValue,
+        }))
     }
 
     function handleChangeStartDate(date) {
-        const dateValue = date ? date.toLocaleDateString('en-CA') : ""
+        const dateValue = date ? date.toLocaleDateString('en-CA') : ''
         setStartDate(date)
-        setNewEmployee((newEmployee) => ({ ...newEmployee, startDate: dateValue }))
+        setNewEmployee((newEmployee) => ({
+            ...newEmployee,
+            startDate: dateValue,
+        }))
     }
 
     function resetForm(e) {
@@ -110,20 +117,15 @@ const FormNewEmployee = () => {
     function focusOnFirstInvalidInput() {
         if (!newEmployee.firstName) {
             firstNameRef.current.focus()
-        }
-        else if (!newEmployee.lastName) {
+        } else if (!newEmployee.lastName) {
             lastNameRef.current.focus()
-        }
-        else if (!newEmployee.dateOfBirth) {
+        } else if (!newEmployee.dateOfBirth) {
             dateOfBirthRef.current.focus()
-        }
-        else if (!newEmployee.startDate) {
+        } else if (!newEmployee.startDate) {
             startDateRef.current.focus()
-        }
-        else if (!newEmployee.department) {
+        } else if (!newEmployee.department) {
             departmentRef.current.focus()
-        }
-        else {
+        } else {
             firstNameRef.current.focus()
         }
     }
@@ -131,13 +133,20 @@ const FormNewEmployee = () => {
     function handleSubmit(e) {
         e.preventDefault()
         setSubmitted(true)
-        const isValidForm = newEmployee.firstName && newEmployee.lastName && newEmployee.dateOfBirth && newEmployee.startDate && newEmployee.department ? true : false
+        const isValidForm =
+            newEmployee.firstName &&
+            newEmployee.lastName &&
+            newEmployee.dateOfBirth &&
+            newEmployee.startDate &&
+            newEmployee.department
+                ? true
+                : false
         console.log(isValidForm)
         if (isValidForm) {
             dispatch(addEmployee(newEmployee))
+            dispatch(openModal())
             resetForm(e)
-        } 
-        else {
+        } else {
             focusOnFirstInvalidInput()
         }
     }
@@ -154,7 +163,7 @@ const FormNewEmployee = () => {
                     isInvalid={submitted && !newEmployee.firstName}
                     isInvalidText={'First Name is required'}
                     innerRef={firstNameRef}
-                    ></Input>
+                ></Input>
                 <Input
                     inputType="text"
                     inputId="lastName"
