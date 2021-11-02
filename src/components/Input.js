@@ -79,6 +79,7 @@ export default function Input({
     isInvalidText,
     required,
     disabled,
+    innerRef
 }) {
     return (
         <InputContainer type={inputType}>
@@ -99,8 +100,9 @@ export default function Input({
                 required={required}
                 disabled={disabled}
                 isInvalid={isInvalid}
+                ref={innerRef}
             />
-            {isInvalid && <InputInvalidText>{isInvalidText}</InputInvalidText>}
+            {isInvalid && <InputInvalidText className="inputError">{isInvalidText}</InputInvalidText>}
         </InputContainer>
     )
 }

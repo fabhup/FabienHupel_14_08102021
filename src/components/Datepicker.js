@@ -49,10 +49,11 @@ const InputInvalidText = styled.span`
     text-align: left;
 `
 
-export default function Datepicker({ id, name, label, value, onChange, required, isInvalid, isInvalidText }) {
+export default function Datepicker({ id, name, label, value, onChange, required, isInvalid, isInvalidText, innerRef }) {
     return (
         <DatePickerContainer>
-            <DatePickerLabel htmlFor={id}>{label}</DatePickerLabel>
+            <DatePickerLabel htmlFor={id} ref = {innerRef}
+>{label}</DatePickerLabel>
             <DatePickerElement
                 type={'text'}
                 id={id}
@@ -62,7 +63,7 @@ export default function Datepicker({ id, name, label, value, onChange, required,
                 required = {required}
                 isInvalid = {isInvalid}
             />
-            {isInvalid && <InputInvalidText>{isInvalidText}</InputInvalidText>}
+            {isInvalid && <InputInvalidText className="inputError">{isInvalidText}</InputInvalidText>}
 
         </DatePickerContainer>
     )

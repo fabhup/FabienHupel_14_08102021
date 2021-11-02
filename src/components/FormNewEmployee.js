@@ -5,7 +5,7 @@ import Input from './Input'
 import Datepicker from './Datepicker'
 import Select from './Select'
 import { states, departments } from '../data/formData'
-import { useState } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { useDispatch } from 'react-redux'
 import {addEmployee} from '../features/employees'
 
@@ -51,8 +51,8 @@ const FieldSet = styled.fieldset`
     }
 `
 
-export default function FormNewEmployee() {
-    const [newEmployee, setNewEmployee] = useState({
+const FormNewEmployee = () => {
+    const emptyEmployee = {
         firstName: null,
         lastName: null,
         dateOfBirth: null,
@@ -62,13 +62,25 @@ export default function FormNewEmployee() {
         state: null,
         zipCode: null,
         department: null,
-    })
+    }
+    const [newEmployee, setNewEmployee] = useState(emptyEmployee)
     const [startDate, setStartDate] = useState('')
     const [dateOfBirth, setBirthDate] = useState('')
     const [submitted, setSubmitted] = useState(false)
 
-    // get Redux state for employes
+    const firstNameRef = useRef()
+    const lastNameRef = useRef()
+    const dateOfBirthRef = useRef()
+    const startDateRef = useRef()
+    const departmentRef = useRef()
+
+    // get Redux state for employees
     const dispatch = useDispatch()
+
+    useEffect(() => {
+        // Focus on first input on first render component
+        firstNameRef.current.focus();
+      },[]);
 
     function handleChangeInput(e) {
         const { name, value } = e.target
@@ -87,22 +99,47 @@ export default function FormNewEmployee() {
         setNewEmployee((newEmployee) => ({ ...newEmployee, startDate: dateValue }))
     }
 
-    const isValidForm = newEmployee.firstName && newEmployee.lastName && newEmployee.dateOfBirth && newEmployee.startDate && newEmployee.department
-
     function resetForm(e) {
         e.target.reset()
+        setNewEmployee(emptyEmployee)
         setStartDate('')
         setBirthDate('')
         setSubmitted(false)
     }
 
-    const handleSubmit = (e) => {
+    function focusOnFirstInvalidInput() {
+        if (!newEmployee.firstName) {
+            firstNameRef.current.focus()
+        }
+        else if (!newEmployee.lastName) {
+            lastNameRef.current.focus()
+        }
+        else if (!newEmployee.dateOfBirth) {
+            dateOfBirthRef.current.focus()
+        }
+        else if (!newEmployee.startDate) {
+            startDateRef.current.focus()
+        }
+        else if (!newEmployee.department) {
+            departmentRef.current.focus()
+        }
+        else {
+            firstNameRef.current.focus()
+        }
+    }
+
+    function handleSubmit(e) {
         e.preventDefault()
         setSubmitted(true)
+        const isValidForm = newEmployee.firstName && newEmployee.lastName && newEmployee.dateOfBirth && newEmployee.startDate && newEmployee.department ? true : false
+        console.log(isValidForm)
         if (isValidForm) {
             dispatch(addEmployee(newEmployee))
             resetForm(e)
         } 
+        else {
+            focusOnFirstInvalidInput()
+        }
     }
 
     return (
@@ -116,6 +153,7 @@ export default function FormNewEmployee() {
                     onChange={handleChangeInput}
                     isInvalid={submitted && !newEmployee.firstName}
                     isInvalidText={'First Name is required'}
+                    innerRef={firstNameRef}
                     ></Input>
                 <Input
                     inputType="text"
@@ -125,6 +163,7 @@ export default function FormNewEmployee() {
                     onChange={handleChangeInput}
                     isInvalid={submitted && !newEmployee.lastName}
                     isInvalidText={'Last Name is required'}
+                    innerRef={lastNameRef}
                 ></Input>
                 <Datepicker
                     id="dateOfBirth"
@@ -134,6 +173,7 @@ export default function FormNewEmployee() {
                     onChange={(date) => handleChangeDateOfBirth(date)}
                     isInvalid={submitted && !newEmployee.dateOfBirth}
                     isInvalidText={'Date of Birth is required'}
+                    innerRef={dateOfBirthRef}
                 />
                 <Datepicker
                     id="startDate"
@@ -143,6 +183,7 @@ export default function FormNewEmployee() {
                     onChange={(date) => handleChangeStartDate(date)}
                     isInvalid={submitted && !newEmployee.startDate}
                     isInvalidText={'Start Date is required'}
+                    innerRef={startDateRef}
                 />
                 <FieldSet className="address">
                     <legend align="left">Address</legend>
@@ -183,6 +224,7 @@ export default function FormNewEmployee() {
                     onChange={handleChangeInput}
                     isInvalid={submitted && !newEmployee.department}
                     isInvalidText={'Department is required'}
+                    innerRef={departmentRef}
                 />
                 <SubmitButton
                     style={{ position: 'relative' }}
@@ -193,3 +235,5 @@ export default function FormNewEmployee() {
         </FormContainer>
     )
 }
+
+export default FormNewEmployee
