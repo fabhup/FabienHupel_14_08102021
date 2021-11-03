@@ -1,16 +1,22 @@
 import logo from '../assets/logo.png'
+import logoAVIF from '../assets/logo.avif'
+
 import React from 'react'
 import styled from 'styled-components'
 import { Link, NavLink } from 'react-router-dom'
 import colors from '../utils/style/color'
 
-const Logo = styled.img`
-    width: 160px;
-    flex-direction: column;
-    margin: 1rem 0 1rem 5vw;
-    position: relative;
-    top: 0;
-    left: 0;
+const Logo = styled.picture`
+    & img,
+    & source {
+        width: 160px;
+        height: 160px;
+        flex-direction: column;
+        margin: 1rem 0 1rem 5vw;
+        position: relative;
+        top: 0;
+        left: 0;
+    }
 `
 
 const StyledHeader = styled.header`
@@ -54,7 +60,10 @@ export default function Header() {
     return (
         <StyledHeader>
             <Link to="/" className="link-to-homepage">
-                <Logo src={logo} alt={'Wealtth Health Logo'} />
+                <Logo>
+                    <source type="image/avif" srcSet={logoAVIF} />
+                    <img src={logo} alt={'Wealtth Health Logo'} />
+                </Logo>
             </Link>
             <Nav>
                 <StyledNavLink exact={true} to="/" className="link-to-homepage">
